@@ -1,45 +1,41 @@
-import authService  from "../../auth/authService"; 
-import { useState } from "react";
+import React from 'react';
+import {LoginForm} from '../../Components/Forms/LoginForm';
+import styles from './LoginStyle.module.css';
 
 
+export function LoginPage() {
+  // TODO: manage global login state, errors, redirects, etc.
+  function handleLoginSubmit(data: {email: string;password: string;}) {
+    // TODO: send login request in authservice
+    // TODO: handle errors and show feedback to user
+    // TODO: redirect on success
+    console.log('Login data submitted:', data);
+  }
 
-export function LoginPage() 
-{
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+  return (
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <div className={styles.layout}>
+          <h1 className={styles.title}>Sign in</h1>
 
-    const handleLogin = async () => {
-        try {
-            await authService.getLoginResponse({ username, password });
-            setIsAuthenticated(true);
-        } catch (error) {
-            console.error('Login failed', error);
-            setIsAuthenticated(false);
-        }
-    };
+          {/* place for global error page */}
+          {/* TODO: show login error */}
+          {/* <div className={styles.error}>Invalid credentials</div> */}
 
-function handleLogout() {
-    authService.logout();
-    setIsAuthenticated(false);
-}
+          <LoginForm  /> // get error onSubmit={handleLoginSubmit}
 
-return (
-    <div>
-    <h2>Auth test</h2>
-        {isAuthenticated ? (
-            <>
-            <p>Logged in successfully!</p>
-            <button onClick={handleLogout}>Logout</button>
-            </>
-        ):(
-            <>
-            <input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /> 
-            <button onClick={handleLogin}>Login</button>
-            </>
-        )}
+          <div className={styles.footer}>
+            <span>Don’t have an account?</span>
+            // TODO: link to registration button Component 
+            <a href="/register" className={styles.link}>
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
- );
-
+  );
 }
+
+
+
