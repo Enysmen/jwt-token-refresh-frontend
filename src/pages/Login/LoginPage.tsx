@@ -22,15 +22,9 @@ export function LoginPage() {
           {/* TODO: show login error */}
           {/* <div className={styles.error}>Invalid credentials</div> */}
 
-          <LoginForm  /> // get error onSubmit={handleLoginSubmit}
-
-          <div className={styles.footer}>
-            <span>Don’t have an account?</span>
-            // TODO: link to registration button Component 
-            <a href="/register" className={styles.link}>
-              Register
-            </a>
-          </div>
+    
+          <LoginForm/>
+          <RegisterButton text="Register" variant="secondary"/> {/*//TODO: add to navigate register page(onClick delegate)*/}
         </div>
       </div>
     </div>

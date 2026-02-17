@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ButtonLogin } from '../Button/ButtonLogin';
 import styles from './LoginFormStyle.module.css';
+import { RegisterButton } from '../Button/RegisterButton';
+
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -12,16 +14,18 @@ export const LoginForm = () => {
     setIsLoading(true);
 
 
-    // Simulate an async login operation
+    // async login operation
   }
 
+  
   return (
     <form className={styles.loginForm} onSubmit={handleSubmit}>
       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
 
       <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
 
-      <ButtonLogin isLoading={isLoading} disabled={!email || !password} />
+      <ButtonLogin isLoading={isLoading} disabled={!email || !password} /> 
+      <RegisterButton text="Register" variant="secondary"/> {/*//TODO: add to navigate register page(onClick delegate)*/}
     </form>
   );
 }

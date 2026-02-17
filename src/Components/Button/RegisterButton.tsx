@@ -1,11 +1,16 @@
-import React  from "react";
-import styles from '../../pages/Login/LoginStyle.module.css';
+import styles from './RegisterButton.module.css';
 
-export function RegisterButton() {
-    {
-        return (
-            <a href="/register" className={styles.link}>Register</a> // TODO: add link to registration page,delete /register
-        );
+interface RegisterButtonProps {
+    text?: string;  
+    onClick?: () => void;
+    variant?: 'primary' | 'secondary';
+    disabled?: boolean;
 
-    }
+}
+
+export const RegisterButton = ({text,onClick,variant = 'primary',disabled = false}: RegisterButtonProps) => {
+    const className = `${styles.registerButton} ${styles[variant]} ${disabled ? styles.disabled : ''}`; 
+    return (
+        <button type="button" className={className} onClick={onClick} disabled={disabled}>{text}</button>
+    );
 }
