@@ -1,0 +1,62 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+  background-color: #f4f6f8;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tokenBox {
+  background-color: #f0f2f5;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.logoutButton {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #b42318;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.logoutButton:hover {
+  background-color: #8f1c13;
+}
