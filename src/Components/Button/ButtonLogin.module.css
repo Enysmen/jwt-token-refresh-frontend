@@ -1,0 +1,21 @@
+.buttonLogin {
+  width: 100%;
+  background-color: #b8860b;
+  border: none;
+  color: #ffffff;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.buttonLogin:hover:not(:disabled) {
+  background-color: #a0740a;
+}
+
+.buttonLogin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

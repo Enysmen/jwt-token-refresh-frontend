@@ -1,0 +1,21 @@
+.registerButton {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #1f6feb;
+  color: #ffffff;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.registerButton:hover:not(:disabled) {
+  background-color: #1558b0;
+}
+
+.registerButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
