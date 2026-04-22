@@ -24,7 +24,6 @@ export function LoginPage() {
 
     
           <LoginForm/>
-          <RegisterButton text="Register" variant="secondary"/> {/*//TODO: add to navigate register page(onClick delegate)*/}
         </div>
       </div>
     </div>
