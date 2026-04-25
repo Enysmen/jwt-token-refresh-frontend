@@ -14,6 +14,7 @@ declare module 'axios' {
     }
     export interface InternalAxiosRequestConfig {
         _retry?: boolean; // to store the original request for retrying after token refresh
+        isRefreshingRequest?: boolean; // flag to indicate if this request is the one that triggered token refresh
     }
 }
 
@@ -93,6 +94,13 @@ httpClientConfig.interceptors.response.use(
         }
 
         if (!originalRequest) {
+            return Promise.reject(error);
+        }
+
+        if (originalRequest.isRefreshingRequest) 
+        {
+            isRefreshingToken = false;
+            processQueue(error);
             return Promise.reject(error);
         }
 
