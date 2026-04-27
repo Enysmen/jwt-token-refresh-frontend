@@ -1,5 +1,6 @@
 import axios from "axios";
 import { type InternalAxiosRequestConfig, type AxiosError } from "axios";
+import {authApi} from "./authApi";
 
 
 const API_BASE_URL = "http://localhost:3000/api"; // mock API base URL 
@@ -10,11 +11,10 @@ let queueRefreshTokenRequests: Array<{ resolve: () => void, reject: (error: Axio
 // add flag to axios 
 declare module 'axios' {
     export interface AxiosRequestConfig {
-        antiCache?: boolean; // flag to indicate if request should be anti-cached
-    }
-    export interface InternalAxiosRequestConfig {
         _retry?: boolean; // to store the original request for retrying after token refresh
         isRefreshingRequest?: boolean; // flag to indicate if this request is the one that triggered token refresh
+        isLogoutRequest?: boolean; // flag to indicate if this request is a logout request
+        antiCache?: boolean; // flag to indicate if request should be anti-cached
     }
 }
 
@@ -82,7 +82,12 @@ httpClientConfig.interceptors.response.use(
     },
     async (error: AxiosError) => {
 
+        if (!error.config)
+        {
+            return Promise.reject(error);
+        } 
         const originalRequest = error.config as InternalAxiosRequestConfig;
+        
 
         //globalStopLoadingStore();
         if (!window.navigator.onLine) {
@@ -108,7 +113,7 @@ httpClientConfig.interceptors.response.use(
         if (originalRequest._retry) {
             return Promise.reject(error);
         }
-
+        
         //if who update token is in progress, we queue the request and wait for the token to be refreshed
         if (isRefreshingToken) {
             return new Promise((resolve, reject) => {
@@ -118,13 +123,17 @@ httpClientConfig.interceptors.response.use(
             });
         }
 
+        if (originalRequest.isLogoutRequest) {
+            return Promise.reject(error);
+        }
+
         // if we get fist 401, we try to refresh the token
         if (error.response?.status === 401) {
             originalRequest._retry = true;
             isRefreshingToken = true;
 
             try {
-                // await refreshToken(); // call your token refresh function here
+                await authApi.refreshToken(); // call your token refresh function here
                 isRefreshingToken = false;
                 processQueue(null); // process the queue of requests waiting for token refresh
                 return await httpClientConfig(originalRequest); // retry the original request
@@ -136,6 +145,8 @@ httpClientConfig.interceptors.response.use(
                 return Promise.reject(refreshError);
             }
         }
+
+
 
     }
 
