@@ -1,4 +1,4 @@
-export interface UserPasswordChangeRequest {
+export interface UserPasswordChangeRequestDto {
     currentPassword: string;
     newPassword: string;
 }
