@@ -1,6 +1,4 @@
+import type { BaseUserDTO } from "../User/BaseUserDTO";
 export interface LoginResponseDto {
-    userId: string;
-    username: string;
-    email: string;
-    roles: string[];
+    user: BaseUserDTO;
 }
