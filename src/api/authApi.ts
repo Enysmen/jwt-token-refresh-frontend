@@ -1,4 +1,5 @@
 import { httpClientConfig } from "./http-client";
+import type { BaseUserDTO } from "../DTO/User/BaseUserDTO";
 import type { LoginRequestDto } from "../DTO/Auth/LoginRequestDto";
 import type { LoginResponseDto } from "../DTO/Auth/LoginResponseDto";
 import type { RegisterRequestDto } from "../DTO/Auth/RegisterRequestDto";
@@ -30,7 +31,7 @@ export const logout = async () => {
     return await httpClientConfig.post("/auth/logout",{},{ isLogoutRequest: true  });
 }
 
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (): Promise<BaseUserDTO> => {
     return await httpClientConfig.get("/auth/me",{antiCache: true});
 }
 
