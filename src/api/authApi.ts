@@ -27,7 +27,7 @@ export const register = async (registerData: RegisterRequestDto) : Promise<Regis
 }
 
 export const logout = async () => {
-    return await httpClientConfig.post("/auth/logout",{ isLogoutRequest: true  });
+    return await httpClientConfig.post("/auth/logout",{},{ isLogoutRequest: true  });
 }
 
 export const getCurrentUser = async () => {
@@ -35,7 +35,7 @@ export const getCurrentUser = async () => {
 }
 
 export const refreshToken = async () => {
-    return await httpClientConfig.post("/auth/refresh-token",{ isRefreshingRequest: true });
+    return await httpClientConfig.post("/auth/refresh-token",{},{ isRefreshingRequest: true });
 }
 
 export const confirmEmail = async (confirmEmailData: ConfirmEmailRequestDto) : Promise<ConfirmEmailResponseDto> => {
