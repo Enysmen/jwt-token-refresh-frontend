@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { type InternalAxiosRequestConfig, type AxiosError } from "axios";
 import {authApi} from "./authApi";
 
@@ -77,7 +77,7 @@ httpClientConfig.interceptors.request.use(
 
 
 httpClientConfig.interceptors.response.use(
-    (response) => {
+    (response: AxiosResponse) => {
         return response.data;
     },
     async (error: AxiosError) => {

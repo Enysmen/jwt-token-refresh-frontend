@@ -1,9 +1,16 @@
-import type {BaseUserDTO} from "../User/BaseUserDTO";
+import {BaseUserSchema} from "../User/BaseUserDTO";
+import {z} from "zod";
 
-export interface AdminUserResponseDto extends BaseUserDTO {
-    createdAt: string;       
-    lastLoginAt?: string;     
-    isActive: boolean;       
-    isBanned: boolean;       
-    isEmailVerified: boolean; 
-}
+
+export const AdminUserResponseSchema = BaseUserSchema.extend({
+    createdAt: z.string().datetime(),
+    lastLoginAt: z.string().datetime().optional().nullable(),
+    isActive: z.boolean(),
+    isBanned: z.boolean(),
+    isEmailVerified: z.boolean()
+});
+
+export type AdminUserResponseDto = z.infer<typeof AdminUserResponseSchema>;
+
+    
+
