@@ -5,6 +5,7 @@ import type { PagedResponseDto } from "../DTO/Common/PagedResponseDto";
 
 
 
+
 export const getAllUsers = async (page: number, pageSize: number) : Promise<PagedResponseDto<AdminUserResponseDto>> => {
     return await httpClientConfig.get("/admin/users", { params: { page, pageSize } }); // page - it's number of page, pageSize - number of items per page
  }
