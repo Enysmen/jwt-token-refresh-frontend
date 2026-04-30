@@ -1,4 +1,9 @@
-export interface RegisterResponseDto {
-    userId: string;
-    requiresEmailConfirmation: boolean;
-}
+import {z} from "zod";
+
+
+export const RegisterResponseSchema = z.object({
+    userId: z.string().uuid(),
+    requiresEmailConfirmation: z.boolean()
+});
+
+export type RegisterResponseDto = z.infer<typeof RegisterResponseSchema>;

@@ -1,22 +1,30 @@
 import { httpClientConfig } from "./http-client";
-import type { BaseUserDTO } from "../DTO/User/BaseUserDTO";
+
 import type { LoginRequestDto } from "../DTO/Auth/LoginRequestDto";
-import type { LoginResponseDto } from "../DTO/Auth/LoginResponseDto";
 import type { RegisterRequestDto } from "../DTO/Auth/RegisterRequestDto";
-import type { RegisterResponseDto } from "../DTO/Auth/RegisterResponseDto";
 import type { ConfirmEmailRequestDto } from "../DTO/Auth/ConfirmEmailRequestDto";
-import type { ConfirmEmailResponseDto } from "../DTO/Auth/ConfirmEmailResponseDto";
+
+import { type BaseUserDTO , BaseUserSchema } from "../DTO/User/BaseUserDTO";
+import { type LoginResponseDto , LoginResponseSchema  } from "../DTO/Auth/LoginResponseDto";
+import { type  RegisterResponseDto, RegisterResponseSchema } from "../DTO/Auth/RegisterResponseDto";
+import { type  ConfirmEmailResponseDto , ConfirmEmailResponseSchema } from "../DTO/Auth/ConfirmEmailResponseDto";
+
+
 
 
 export const login =  async (loginData: LoginRequestDto) : Promise<LoginResponseDto> => {
-    return await httpClientConfig.post("/auth/login", {
+
+     const response = await httpClientConfig.post("/auth/login", {
         email: loginData.email,
         password: loginData.password
     });
+
+    return LoginResponseSchema.parse(response);
 }
 
 export const register = async (registerData: RegisterRequestDto) : Promise<RegisterResponseDto> => {
-    return await httpClientConfig.post("/auth/register", {
+
+     const response = await httpClientConfig.post("/auth/register", {
         email: registerData.email,
         password: registerData.password,
         userName: registerData.userName,
@@ -25,6 +33,8 @@ export const register = async (registerData: RegisterRequestDto) : Promise<Regis
         acceptTerms: registerData.acceptTerms,
         language: registerData.language
     });
+
+    return RegisterResponseSchema.parse(response);
 }
 
 export const logout = async () => {
@@ -32,7 +42,10 @@ export const logout = async () => {
 }
 
 export const getCurrentUser = async (): Promise<BaseUserDTO> => {
-    return await httpClientConfig.get("/auth/me",{antiCache: true});
+
+    const response = await httpClientConfig.get("/auth/me",{antiCache: true});
+
+    return BaseUserSchema.parse(response);
 }
 
 export const refreshToken = async () => {
@@ -40,9 +53,12 @@ export const refreshToken = async () => {
 }
 
 export const confirmEmail = async (confirmEmailData: ConfirmEmailRequestDto) : Promise<ConfirmEmailResponseDto> => {
-    return await httpClientConfig.post("/auth/confirm-email", {
+
+    const response = await httpClientConfig.post("/auth/confirm-email", {
         token: confirmEmailData.token
     });
+    
+    return ConfirmEmailResponseSchema.parse(response);
 }
 
 
