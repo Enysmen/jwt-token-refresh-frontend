@@ -1,7 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import { type InternalAxiosRequestConfig, type AxiosError } from "axios";
-import {authApi} from "./authApi";
-
+import { authApi } from "./authApi";
 
 const API_BASE_URL = "http://localhost:3000/api"; // mock API base URL 
 
@@ -40,6 +39,8 @@ export const processQueue = (error: AxiosError | null) => {
 }
 
 
+
+
 httpClientConfig.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         config.headers['Accept-Language'] = localStorage.getItem('lang') || 'en';
@@ -53,13 +54,15 @@ httpClientConfig.interceptors.request.use(
         //globalStartLoadingStore();
         return config;
     },
-    async (error: AxiosError) => {
-        if (!window.navigator.onLine) {
-            throw new axios.Cancel("No internet connection. Please check your network and try again.");
+    (error: AxiosError) => {
+
+        if (axios.isCancel(error)) 
+        {
+            return Promise.reject(error);
         }
 
-        if (axios.isCancel(error)) {
-            console.warn("Request cancelled:", error.message);
+        if (!error.config) 
+        {
             return Promise.reject(error);
         }
 
@@ -68,7 +71,6 @@ httpClientConfig.interceptors.request.use(
         }
 
         //globalStopLoadingStore();
-        console.error("Critical error while preparing request", error.request);
         return Promise.reject(error);
     }
 
@@ -82,18 +84,20 @@ httpClientConfig.interceptors.response.use(
     },
     async (error: AxiosError) => {
 
-        if (!error.config)
-        {
-            return Promise.reject(error);
-        } 
-        const originalRequest = error.config as InternalAxiosRequestConfig;
-        
 
-        //globalStopLoadingStore();
-        if (!window.navigator.onLine) {
-            throw new axios.Cancel("No internet connection. Please check your network and try again.");
+        if (axios.isCancel(error)) {
+            return Promise.reject(error);
         }
 
+
+        if (!error.config) {
+            return Promise.reject(error);
+        }
+
+        const originalRequest = error.config as InternalAxiosRequestConfig;
+
+
+        //globalStopLoadingStore();
         if (error.response?.status !== 401) {
             return Promise.reject(error);
         }
@@ -102,8 +106,7 @@ httpClientConfig.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        if (originalRequest.isRefreshingRequest) 
-        {
+        if (originalRequest.isRefreshingRequest) {
             isRefreshingToken = false;
             processQueue(error);
             return Promise.reject(error);
@@ -113,7 +116,7 @@ httpClientConfig.interceptors.response.use(
         if (originalRequest._retry) {
             return Promise.reject(error);
         }
-        
+
         //if who update token is in progress, we queue the request and wait for the token to be refreshed
         if (isRefreshingToken) {
             return new Promise((resolve, reject) => {
@@ -138,7 +141,7 @@ httpClientConfig.interceptors.response.use(
                 processQueue(null); // process the queue of requests waiting for token refresh
                 return await httpClientConfig(originalRequest); // retry the original request
             }
-            catch (refreshError) {
+            catch (refreshError ) {
                 isRefreshingToken = false;
                 processQueue(refreshError as AxiosError); // reject all queued requests with the refresh error
                 // add logout logic route 
