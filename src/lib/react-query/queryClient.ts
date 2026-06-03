@@ -1,24 +1,15 @@
-import axios from "axios";
-import { ZodError } from "zod";
 
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
+import {mutationErrorHandler} from "./mutationErrorHandler";
 
-import { axiosQueryErrorHandler, zodQueryErrorHandler } from "./queryErrorHandler";
-import { axiosMutationErrorHandler, zodMutationErrorHandler } from "./mutationErrorHandler"; 
+import {queryErrorHandler, } from "./queryErrorHandler";
+
 import { shouldRetryQuery , queryRetryDelay } from "./retryPolicy"
 
 
 export const queryCache = new QueryCache({
     onError: (error, query) : void  => {
-        if (axios.isAxiosError(error)) 
-        {
-            axiosQueryErrorHandler(error, query);
-        }
-
-        if (error instanceof ZodError) 
-        {
-            zodQueryErrorHandler(error, query);
-        }
+        queryErrorHandler(error, query);
     },
 });
 
@@ -26,16 +17,7 @@ export const queryCache = new QueryCache({
 export const mutationCache = new MutationCache({
     onError: (error, _variables, _onMutateResult, mutation) => {
 
-        if (axios.isAxiosError(error)) 
-        {
-            axiosMutationErrorHandler(error, mutation);
-        }
-
-        if (error instanceof ZodError) 
-        {
-            zodMutationErrorHandler(error, mutation);
-        }
-
+        mutationErrorHandler(error, mutation);
     }
 });
 
