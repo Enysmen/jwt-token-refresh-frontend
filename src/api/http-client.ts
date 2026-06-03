@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import { type InternalAxiosRequestConfig, type AxiosError } from "axios";
-import { authApi } from "./authApi";
+
 
 const API_BASE_URL = "http://localhost:3000/api"; // mock API base URL 
 
@@ -117,8 +117,14 @@ httpClientConfig.interceptors.response.use(
             return Promise.reject(error);
         }
 
+        if (originalRequest.isLogoutRequest) {
+            return Promise.reject(error);
+        }
+
         //if who update token is in progress, we queue the request and wait for the token to be refreshed
         if (isRefreshingToken) {
+            originalRequest._retry = true;
+
             return new Promise((resolve, reject) => {
                 queueRefreshTokenRequests.push({ resolve: () => resolve(httpClientConfig(originalRequest)), reject });
             }).catch((err) => {
@@ -126,17 +132,12 @@ httpClientConfig.interceptors.response.use(
             });
         }
 
-        if (originalRequest.isLogoutRequest) {
-            return Promise.reject(error);
-        }
-
         // if we get fist 401, we try to refresh the token
         if (error.response?.status === 401) {
-            originalRequest._retry = true;
             isRefreshingToken = true;
 
             try {
-                await authApi.refreshToken(); // call your token refresh function here
+                await httpClientConfig.post('/auth/refresh-token',{}, { isRefreshingRequest: true }); // call your token refresh function here
                 isRefreshingToken = false;
                 processQueue(null); // process the queue of requests waiting for token refresh
                 return await httpClientConfig(originalRequest); // retry the original request
